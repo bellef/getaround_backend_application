@@ -166,21 +166,40 @@ describe Rental do
         end
 
         describe '[OPTIONS]' do
-          context 'with a gps' do
-            let(:options) { [Option.new(**{ id: 1, rental_id: 1, type: 'gps' })] }
+          context 'with a gps and a baby seat' do
+            let(:options) { [Option.new(**{ id: 1, rental_id: 1, type: 'gps' }),
+                             Option.new(**{ id: 2, rental_id: 1, type: 'baby_seat' })] }
 
             it 'gives the extra money to the owner' do
-              owner_action = rental.actions.find { |a| a['who'] == 'owner' }
-              expect(owner_action['amount']).to eq(2600)
-            end
-          end
-
-          context 'with a baby seat' do
-            let(:options) { [Option.new(**{ id: 2, rental_id: 1, type: 'baby_seat' })] }
-
-            it 'gives the extra money to the owner' do
-              owner_action = rental.actions.find { |a| a['who'] == 'owner' }
-              expect(owner_action['amount']).to eq(2300)
+              expect(rental.actions).to eq(
+                [
+                  {
+                    "who": "driver",
+                    "type": "debit",
+                    "amount": 3700
+                  },
+                  {
+                    "who": "owner",
+                    "type": "credit",
+                    "amount": 2800
+                  },
+                  {
+                    "who": "insurance",
+                    "type": "credit",
+                    "amount": 450
+                  },
+                  {
+                    "who": "assistance",
+                    "type": "credit",
+                    "amount": 100
+                  },
+                  {
+                    "who": "drivy",
+                    "type": "credit",
+                    "amount": 350
+                  }
+                ]
+              )
             end
           end
 
@@ -188,8 +207,35 @@ describe Rental do
             let(:options) { [Option.new(**{ id: 3, rental_id: 1, type: 'additional_insurance' })] }
 
             it 'gives the extra money to drivy' do
-              drivy_action = rental.actions.find { |a| a['who'] == 'drivy' }
-              expect(drivy_action['amount']).to eq(1350)
+              expect(rental.actions).to eq(
+                [
+                  {
+                    "who": "driver",
+                    "type": "debit",
+                    "amount": 4000
+                  },
+                  {
+                    "who": "owner",
+                    "type": "credit",
+                    "amount": 2100
+                  },
+                  {
+                    "who": "insurance",
+                    "type": "credit",
+                    "amount": 450
+                  },
+                  {
+                    "who": "assistance",
+                    "type": "credit",
+                    "amount": 100
+                  },
+                  {
+                    "who": "drivy",
+                    "type": "credit",
+                    "amount": 1350
+                  }
+                ]
+              )
             end
           end
         end
