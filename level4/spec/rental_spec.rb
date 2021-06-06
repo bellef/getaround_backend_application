@@ -106,7 +106,35 @@ describe Rental do
         let(:rental) { rental_1 }
 
         it 'returns action details as expected' do
-          expect(rental.commission).to eq(nil)
+          expect(rental.actions).to eq(
+            [
+              {
+                "who": "driver",
+                "type": "debit",
+                "amount": 3000
+              },
+              {
+                "who": "owner",
+                "type": "credit",
+                "amount": 2100
+              },
+              {
+                "who": "insurance",
+                "type": "credit",
+                "amount": 450
+              },
+              {
+                "who": "assistance",
+                "type": "credit",
+                "amount": 100
+              },
+              {
+                "who": "drivy",
+                "type": "credit",
+                "amount": 350
+              }
+            ]
+          )
         end
       end
 
@@ -114,7 +142,35 @@ describe Rental do
         let(:rental) { rental_2 }
 
         it 'returns action details as expected' do
-          expect(rental.commission).to eq(nil)
+          expect(rental.actions).to eq(
+            [
+              {
+                "who": "driver",
+                "type": "debit",
+                "amount": 6800
+              },
+              {
+                "who": "owner",
+                "type": "credit",
+                "amount": 4760
+              },
+              {
+                "who": "insurance",
+                "type": "credit",
+                "amount": 1020
+              },
+              {
+                "who": "assistance",
+                "type": "credit",
+                "amount": 200
+              },
+              {
+                "who": "drivy",
+                "type": "credit",
+                "amount": 820
+              }
+            ]
+          )
         end
       end
 
@@ -122,7 +178,35 @@ describe Rental do
         let(:rental) { rental_4 }
 
         it 'returns action details as expected' do
-          expect(rental.commission).to eq(nil)
+          expect(rental.actions).to eq(
+            [
+              {
+                "who": "driver",
+                "type": "debit",
+                "amount": 27800
+              },
+              {
+                "who": "owner",
+                "type": "credit",
+                "amount": 19460
+              },
+              {
+                "who": "insurance",
+                "type": "credit",
+                "amount": 4170
+              },
+              {
+                "who": "assistance",
+                "type": "credit",
+                "amount": 1200
+              },
+              {
+                "who": "drivy",
+                "type": "credit",
+                "amount": 2970
+              }
+            ]
+          )
         end
       end
     end
