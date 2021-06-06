@@ -8,11 +8,11 @@ describe Rental do
 
       context 'with a rental lasting 3 days and driving 100km' do
         let(:rental) do
-          Rental.new({ id: 1, car_id: 1, start_date: "2017-12-8", end_date: "2017-12-10", distance: 100 })
+          Rental.new({ id: 1, start_date: "2017-12-8", end_date: "2017-12-10", distance: 100 }, car)
         end
 
         it 'costs 70€' do
-          expect(rental.price).to eq(700)
+          expect(rental.price).to eq(7000)
         end
       end
     end
