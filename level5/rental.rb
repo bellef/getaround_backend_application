@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'JSON'
 require 'Date'
 
@@ -14,17 +16,6 @@ class Rental
     @distance   = distance
   end
 
-
-  # - Rental days multiplied by the car's price per day
-  # - Kms multiplied by the car's price per km
-  # 
-  # - Price per day decreases by 10% after 1 day (only on days exceeding 1)
-  # - Price per day decreases by 30% after 4 days (only on days exceeding 4)
-  # - Price per day decreases by 50% after 10 days (only on days exceeding 10)
-  # 
-  # - GPS: 5€/day, all the money goes to the owner
-  # - Baby Seat: 2€/day, all the money goes to the owner
-  # - Additional Insurance: 10€/day, all the money goes to Getaround
   def price
     (duration_price + distance_price + options_price).to_i
   end
@@ -49,42 +40,42 @@ class Rental
   end
 
   OPTIONS_PRICING_RULES = {
-    gps:                  { price_per_day: 500,  beneficiary: 'owner' },
-    baby_seat:            { price_per_day: 200,  beneficiary: 'owner' },
+    gps: { price_per_day: 500,  beneficiary: 'owner' },
+    baby_seat: { price_per_day: 200, beneficiary: 'owner' },
     additional_insurance: { price_per_day: 1000, beneficiary: 'drivy' }
-  }
+  }.freeze
   def actions
     rental_commission_details = commission
     rental_fees_total         = rental_commission_details.inject(0) do |c, (_k, v)|
-                                  c + v
-                                end
-    owner_credit              = price - rental_fees_total -
-                                options_price + options_price(beneficiary: 'owner')
+      c + v
+    end
+    owner_credit = price - rental_fees_total -
+                   options_price + options_price(beneficiary: 'owner')
 
     [
       {
-        "who": "driver",
-        "type": "debit",
+        "who":    'driver',
+        "type":   'debit',
         "amount": price
       },
       {
-        "who": "owner",
-        "type": "credit",
+        "who":    'owner',
+        "type":   'credit',
         "amount": owner_credit
       },
       {
-        "who": "insurance",
-        "type": "credit",
+        "who":    'insurance',
+        "type":   'credit',
         "amount": rental_commission_details[:insurance_fee]
       },
       {
-        "who": "assistance",
-        "type": "credit",
+        "who":    'assistance',
+        "type":   'credit',
         "amount": rental_commission_details[:assistance_fee]
       },
       {
-        "who": "drivy",
-        "type": "credit",
+        "who":    'drivy',
+        "type":   'credit',
         "amount": rental_commission_details[:drivy_fee] + options_price(beneficiary: 'drivy')
       }
     ]
@@ -109,17 +100,17 @@ class Rental
       threshold_days: 1,
       daily_price_reduction: 0.1
     }
-  ]
+  ].freeze
   def duration_price
     duration = duration_days
     price = 0
 
     DECREASING_PRICING_RULES.each do |rule|
-      if duration > rule[:threshold_days]
-        price += (duration - rule[:threshold_days]) *
-                 ((1 - rule[:daily_price_reduction]) * @car.price_per_day)
-        duration = rule[:threshold_days]
-      end
+      next unless duration > rule[:threshold_days]
+
+      price += (duration - rule[:threshold_days]) *
+               ((1 - rule[:daily_price_reduction]) * @car.price_per_day)
+      duration = rule[:threshold_days]
     end
 
     # No price reduction for the remaining duration
@@ -149,4 +140,3 @@ class Rental
     end
   end
 end
-

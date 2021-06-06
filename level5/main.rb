@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './rental'
 require_relative './car'
 require_relative './option'
@@ -19,7 +21,7 @@ end
 
 def deserialize_input_rentals(input_data, cars, available_options)
   input_data[:rentals].map do |rental_data|
-    car     = cars.find { |car| car.id == rental_data[:car_id] }
+    car     = cars.find { |c| c.id == rental_data[:car_id] }
     options = available_options.select { |option| option.rental_id == rental_data[:id] }
 
     Rental.new(car, options, **rental_data)

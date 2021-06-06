@@ -13,7 +13,6 @@ class Rental
     @distance   = distance
   end
 
-
   # - Rental days multiplied by the car's price per day
   # - Kms multiplied by the car's price per km
   # 

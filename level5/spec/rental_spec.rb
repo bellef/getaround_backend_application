@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../rental'
 require_relative '../car'
 require_relative '../option'
