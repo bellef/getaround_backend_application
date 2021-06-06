@@ -26,25 +26,33 @@ class Rental
 
   private
 
+  DECREASING_PRICING_RULES = [
+    {
+      threshold_days: 10,
+      daily_price_reduction: 0.5
+    },
+    {
+      threshold_days: 4,
+      daily_price_reduction: 0.3
+    },
+    {
+      threshold_days: 1,
+      daily_price_reduction: 0.1
+    }
+  ]
   def duration_price
     duration_days = (Date.parse(@end_date) - Date.parse(@start_date)).to_i + 1
     price         = 0
 
-    if duration_days > 10
-      price         += (duration_days - 10) * (0.5 * @car.price_per_day)
-      duration_days = 10
+    DECREASING_PRICING_RULES.each do |rule|
+      if duration_days > rule[:threshold_days]
+        price += (duration_days - rule[:threshold_days]) *
+                 ((1 - rule[:daily_price_reduction]) * @car.price_per_day)
+        duration_days = rule[:threshold_days]
+      end
     end
 
-    if duration_days > 4
-      price         += (duration_days - 4) * (0.7 * @car.price_per_day)
-      duration_days = 4
-    end
-
-    if duration_days > 1
-      price         += (duration_days - 1) * (0.9 * @car.price_per_day)
-      duration_days = 1
-    end
-
+    # No price reduction for the remaining duration
     price += duration_days * @car.price_per_day
 
     price
