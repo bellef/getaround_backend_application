@@ -19,14 +19,13 @@ def deserialize_input_rentals(input_data, cars)
 end
 
 def main
-  input_data = JSON.parse(File.read(INPUT_FILE_PATH), symbolize_names: true)
-  cars       = deserialize_input_cars(input_data)
-  rentals    = deserialize_input_rentals(input_data, cars)
+  input_data     = JSON.parse(File.read(INPUT_FILE_PATH), symbolize_names: true)
+  cars           = deserialize_input_cars(input_data)
+  rentals        = deserialize_input_rentals(input_data, cars)
+  rentals_output = rentals.map { |rental| { id: rental.id, price: rental.price } }
+  output         = { rentals: rentals_output }
 
-  puts cars
-  puts rentals
-
-  puts rentals.first.price
+  File.write(OUTPUT_FILE_PATH, JSON.generate(output))
 end
 
 main

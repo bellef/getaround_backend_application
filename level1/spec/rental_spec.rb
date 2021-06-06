@@ -8,7 +8,7 @@ describe Rental do
 
       context 'with a rental lasting 3 days and driving 100km' do
         let(:rental) do
-          Rental.new(car, **{ id: 1, start_date: "2017-12-8", end_date: "2017-12-10", distance: 100 })
+          Rental.new(car, **{ id: 1, car_id: 1, start_date: "2017-12-8", end_date: "2017-12-10", distance: 100 })
         end
 
         it 'costs 70€' do

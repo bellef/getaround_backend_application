@@ -2,8 +2,11 @@ require 'JSON'
 require 'Date'
 
 class Rental
-  def initialize(car, id:, start_date:, end_date:, distance:)
+  attr_reader :id
+
+  def initialize(car, car_id:, id:, start_date:, end_date:, distance:)
     @car        = car
+    @car_id     = car_id
     @id         = id
     @start_date = start_date
     @end_date   = end_date
