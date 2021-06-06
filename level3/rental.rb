@@ -21,10 +21,33 @@ class Rental
   # - Price per day decreases by 30% after 4 days (only on days exceeding 4)
   # - Price per day decreases by 50% after 10 days (only on days exceeding 10)
   def price
-    duration_price + distance_price
+    (duration_price + distance_price).to_i
+  end
+
+  # - 30% commission on rental price
+  # - half goes to the insurance
+  # - 1€/day goes to the roadside assistance
+  # - the rest goes to us
+  BASE_COMMISSION_RATE = 0.3
+  def commission
+    base_commission = price * BASE_COMMISSION_RATE
+
+    insurance_fee  = base_commission / 2
+    assistance_fee = duration_days * 100
+    drivy_fee      = base_commission - (insurance_fee + assistance_fee)
+
+    {
+      insurance_fee: insurance_fee.to_i,
+      assistance_fee: assistance_fee.to_i,
+      drivy_fee: drivy_fee.to_i
+    }
   end
 
   private
+
+  def duration_days
+    (Date.parse(@end_date) - Date.parse(@start_date)).to_i + 1
+  end
 
   DECREASING_PRICING_RULES = [
     {
@@ -41,19 +64,19 @@ class Rental
     }
   ]
   def duration_price
-    duration_days = (Date.parse(@end_date) - Date.parse(@start_date)).to_i + 1
-    price         = 0
+    duration = duration_days
+    price = 0
 
     DECREASING_PRICING_RULES.each do |rule|
-      if duration_days > rule[:threshold_days]
-        price += (duration_days - rule[:threshold_days]) *
+      if duration > rule[:threshold_days]
+        price += (duration - rule[:threshold_days]) *
                  ((1 - rule[:daily_price_reduction]) * @car.price_per_day)
-        duration_days = rule[:threshold_days]
+        duration = rule[:threshold_days]
       end
     end
 
     # No price reduction for the remaining duration
-    price += duration_days * @car.price_per_day
+    price += duration * @car.price_per_day
 
     price
   end
