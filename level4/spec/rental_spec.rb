@@ -63,7 +63,7 @@ describe Rental do
       context 'with a rental lasting 1 day and driving 100km' do
         let(:rental) { rental_1 }
 
-        it 'returns a commission as expected' do
+        it 'returns commission details as expected' do
           expect(rental.commission).to eq({
             "insurance_fee": 450,
             "assistance_fee": 100,
@@ -75,7 +75,7 @@ describe Rental do
       context 'with a rental lasting 2 days and driving 300km' do
         let(:rental) { rental_2 }
 
-        it 'costs 68€' do
+        it 'returns commission details as expected' do
           expect(rental.commission).to eq({
             "insurance_fee": 1020,
             "assistance_fee": 200,
@@ -87,12 +87,42 @@ describe Rental do
       context 'with a rental lasting 12 days and driving 1000km' do
         let(:rental) { rental_4 }
 
-        it 'costs 278€' do
+        it 'returns commission details as expected' do
           expect(rental.commission).to eq({
             "insurance_fee": 4170,
             "assistance_fee": 1200,
             "drivy_fee": 2970
           })
+        end
+      end
+    end
+  end
+
+  describe '#actions' do
+    context 'with a car costing 20€ a day and 10 cents a km' do
+      let(:car) { car_1 }
+
+      context 'with a rental lasting 1 day and driving 100km' do
+        let(:rental) { rental_1 }
+
+        it 'returns action details as expected' do
+          expect(rental.commission).to eq(nil)
+        end
+      end
+
+      context 'with a rental lasting 2 days and driving 300km' do
+        let(:rental) { rental_2 }
+
+        it 'returns action details as expected' do
+          expect(rental.commission).to eq(nil)
+        end
+      end
+
+      context 'with a rental lasting 12 days and driving 1000km' do
+        let(:rental) { rental_4 }
+
+        it 'returns action details as expected' do
+          expect(rental.commission).to eq(nil)
         end
       end
     end
