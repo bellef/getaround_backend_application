@@ -1,4 +1,5 @@
 require 'JSON'
+require 'Date'
 
 class Rental
   def initialize(data)
@@ -7,5 +8,9 @@ class Rental
     @start_date = data[:start_date]
     @end_date   = data[:end_date]
     @distance   = data[:distance]
+  end
+
+  def price
+    # TODO
   end
 end
