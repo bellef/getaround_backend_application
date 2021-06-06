@@ -43,6 +43,43 @@ class Rental
     }
   end
 
+  def actions
+    rental_price              = price
+    rental_commission_details = commission
+    rental_fees_sum           = rental_commission_details.inject(0) do |c, (_k, v)|
+                                  c + v
+                                end
+    owner_credit              = rental_price - rental_fees_sum
+
+    [
+      {
+        "who": "driver",
+        "type": "debit",
+        "amount": rental_price
+      },
+      {
+        "who": "owner",
+        "type": "credit",
+        "amount": owner_credit
+      },
+      {
+        "who": "insurance",
+        "type": "credit",
+        "amount": rental_commission_details[:insurance_fee]
+      },
+      {
+        "who": "assistance",
+        "type": "credit",
+        "amount": rental_commission_details[:assistance_fee]
+      },
+      {
+        "who": "drivy",
+        "type": "credit",
+        "amount": rental_commission_details[:drivy_fee]
+      }
+    ]
+  end
+
   private
 
   def duration_days

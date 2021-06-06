@@ -22,7 +22,7 @@ def main
   input_data     = JSON.parse(File.read(INPUT_FILE_PATH), symbolize_names: true)
   cars           = deserialize_input_cars(input_data)
   rentals        = deserialize_input_rentals(input_data, cars)
-  rentals_output = rentals.map { |rental| { id: rental.id, price: rental.price, commission: rental.commission } }
+  rentals_output = rentals.map { |rental| { id: rental.id, actions: rental.actions } }
   output         = { rentals: rentals_output }
 
   File.write(OUTPUT_FILE_PATH, JSON.generate(output))
