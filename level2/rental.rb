@@ -28,8 +28,26 @@ class Rental
 
   def duration_price
     duration_days = (Date.parse(@end_date) - Date.parse(@start_date)).to_i + 1
+    price         = 0
 
-    duration_days * @car.price_per_day
+    if duration_days > 10
+      price         += (duration_days - 10) * (0.5 * @car.price_per_day)
+      duration_days = 10
+    end
+
+    if duration_days > 4
+      price         += (duration_days - 4) * (0.7 * @car.price_per_day)
+      duration_days = 4
+    end
+
+    if duration_days > 1
+      price         += (duration_days - 1) * (0.9 * @car.price_per_day)
+      duration_days = 1
+    end
+
+    price += duration_days * @car.price_per_day
+
+    price
   end
 
   def distance_price
