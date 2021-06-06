@@ -2,12 +2,12 @@ require 'JSON'
 require 'Date'
 
 class Rental
-  def initialize(data, car)
-    @id         = data[:id]
-    @start_date = data[:start_date]
-    @end_date   = data[:end_date]
-    @distance   = data[:distance]
+  def initialize(car, id:, start_date:, end_date:, distance:)
     @car        = car
+    @id         = id
+    @start_date = start_date
+    @end_date   = end_date
+    @distance   = distance
   end
 
   def price
