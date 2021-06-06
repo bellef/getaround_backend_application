@@ -4,7 +4,7 @@ require 'Date'
 class Rental
   attr_reader :id, :options
 
-  def initialize(car, options, car_id:, id:, start_date:, end_date:, distance:)
+  def initialize(car, options = [], car_id:, id:, start_date:, end_date:, distance:)
     @car        = car
     @options    = options
     @car_id     = car_id
@@ -21,8 +21,12 @@ class Rental
   # - Price per day decreases by 10% after 1 day (only on days exceeding 1)
   # - Price per day decreases by 30% after 4 days (only on days exceeding 4)
   # - Price per day decreases by 50% after 10 days (only on days exceeding 10)
+  # 
+  # - GPS: 5€/day, all the money goes to the owner
+  # - Baby Seat: 2€/day, all the money goes to the owner
+  # - Additional Insurance: 10€/day, all the money goes to Getaround
   def price
-    (duration_price + distance_price).to_i
+    (duration_price + distance_price + options_price).to_i
   end
 
   # - 30% commission on rental price
@@ -44,6 +48,11 @@ class Rental
     }
   end
 
+  OPTIONS_PRICING_RULES = {
+    gps:                  { price_per_day: 500,  beneficiary: 'owner' },
+    baby_seat:            { price_per_day: 200,  beneficiary: 'owner' },
+    additional_insurance: { price_per_day: 1000, beneficiary: 'drivy' }
+  }
   def actions
     rental_price              = price
     rental_commission_details = commission
@@ -122,4 +131,13 @@ class Rental
   def distance_price
     @distance * @car.price_per_km
   end
+
+  def options_price
+    @options.inject(0) do |c, option|
+      price_per_day = OPTIONS_PRICING_RULES[option.type.to_sym][:price_per_day]
+
+      c + price_per_day * duration_days
+    end
+  end
 end
+
