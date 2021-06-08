@@ -9,13 +9,13 @@ OUTPUT_FILE_PATH = 'data/output.json'
 
 def deserialize_input_cars(input_data)
   input_data[:cars].map do |car_data|
-    Car.new(**car_data)
+    Car.new(car_data)
   end
 end
 
 def deserialize_input_options(input_data)
   input_data[:options].map do |option_data|
-    Option.new(**option_data)
+    Option.new(option_data)
   end
 end
 
@@ -24,7 +24,7 @@ def deserialize_input_rentals(input_data, cars, available_options)
     car     = cars.find { |c| c.id == rental_data[:car_id] }
     options = available_options.select { |option| option.rental_id == rental_data[:id] }
 
-    Rental.new(car, options, **rental_data)
+    Rental.new({ car: car, options: options }.merge(rental_data))
   end
 end
 

@@ -6,14 +6,14 @@ require 'Date'
 class Rental
   attr_reader :id, :options
 
-  def initialize(car, options = [], car_id:, id:, start_date:, end_date:, distance:)
-    @car        = car
-    @options    = options
-    @car_id     = car_id
-    @id         = id
-    @start_date = start_date
-    @end_date   = end_date
-    @distance   = distance
+  def initialize(params)
+    @car        = params[:car]
+    @options    = params[:options] || []
+    @car_id     = params[:car_id]
+    @id         = params[:id]
+    @start_date = params[:start_date]
+    @end_date   = params[:end_date]
+    @distance   = params[:distance]
   end
 
   def price
